@@ -20,16 +20,18 @@ const sessionController = {
      */
     logout: (req, res) => {
         addLogger(req, res, async () => {
-            req.user.last_connection = new Date();
-            req.user.save();
-            req.session.destroy((err) => {
-                if (err) {
-                    req.logger.error('Sesión cerrada exitosamente')
-                    return response.successResponse(res, 200, 'Sesión cerrada exitosamente', null);
-                }
-                req.loger.error('Error al cerrar sesión')
-                return response.errorResponse(res, 500, 'Error al cerrar sesión');
-            });
+            if( req.user) {
+                req.user.last_connection = new Date();
+                req.user.save();
+            }
+                req.session.destroy((err) => {
+                    if (err) {
+                        req.logger.error('Sesión cerrada exitosamente')
+                        return response.successResponse(res, 200, 'Sesión cerrada exitosamente', null);
+                    }
+                    req.loger.error('Error al cerrar sesión')
+                    return response.errorResponse(res, 500, 'Error al cerrar sesión');
+                });
         });
     },
 
